@@ -1,34 +1,54 @@
 ﻿#include <iostream>
-#include <cstring> 
 
 template<typename T>
-void findMaxAndCount(const T* array, int size, T& maxVal, int& count) {
+void findMaxAndCount(T arr[], int size, T& maxVal, int& count) {
     if (size == 0) {
-        count = 0;
+        std::cerr << "Error: Array is empty\n";
         return;
     }
 
-    maxVal = array[0];
+    maxVal = arr[0];
     count = 1;
 
     for (int i = 1; i < size; ++i) {
-        if (array[i] > maxVal) {
-            maxVal = array[i];
+        if (arr[i] > maxVal) {
+            maxVal = arr[i];
             count = 1;
         }
-        else if (array[i] == maxVal) {
+        else if (arr[i] == maxVal) {
             count++;
         }
     }
 }
 
+// Specialization for const char*
+void findMaxAndCount(const char* arr[], int size, const char*& maxVal, int& count) {
+    if (size == 0) {
+        std::cerr << "Error: Array is empty\n";
+        return;
+    }
+
+    maxVal = arr[0];
+    count = 1;
+
+    for (int i = 1; i < size; ++i) {
+        if (strcmp(arr[i], maxVal) > 0) {
+            maxVal = arr[i];
+            count = 1;
+        }
+        else if (strcmp(arr[i], maxVal) == 0) {
+            count++;
+        }
+    }
+}
+
+
 template<typename T>
-void shellSort(T arr[], int n) {
-    for (int gap = n / 2; gap > 0; gap /= 2) {
-        for (int i = gap; i < n; ++i) {
+void shellSort(T arr[], int size) {
+    for (int gap = size / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < size; ++i) {
             T temp = arr[i];
             int j;
-
             for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
                 arr[j] = arr[j - gap];
             }
@@ -37,18 +57,17 @@ void shellSort(T arr[], int n) {
     }
 }
 
-// Вибір функції залежно від шаблону
-template<typename T>
-void performTask(T arr[], int n, bool useFindMaxAndCount) {
-    if (useFindMaxAndCount) {
-        T maxVal;
-        int count;
-        findMaxAndCount(arr, n, maxVal, count);
-        std::cout << "Max value: " << maxVal << ", Count: " << count << std::endl;
-    }
-    else {
-        shellSort(arr, n);
-        std::cout << "Array sorted." << std::endl;
+// Specialization for char*
+void shellSort(char* arr[], int size) {
+    for (int gap = size / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < size; ++i) {
+            char* temp = arr[i];
+            int j;
+            for (j = i; j >= gap && strcmp(arr[j - gap], temp) > 0; j -= gap) {
+                arr[j] = arr[j - gap];
+            }
+            arr[j] = temp;
+        }
     }
 }
 
@@ -58,30 +77,24 @@ int main() {
     std::cin >> choice;
 
     if (choice == 1) {
-        int intArray[] = { 1, 2, 3, 4, 5, 5, 4, 3, 2, 1 };
-        int maxInt, intCount;
-        performTask(intArray, 10, true);
+       const char* strings[] = { "apple", "banana", "apple", "orange", "banana" };
+        const char* maxStr;
+        int count;
+
+        findMaxAndCount(strings, 5, maxStr, count);
+
+        std::cout << "Max string: " << maxStr << ", Count: " << count << std::endl;
     }
-    else if (choice == 2) {
-        const char* arr[] = { "banana", "apple", "orange", "grape", "kiwi" };
-        int n = sizeof(arr) / sizeof(arr[0]);
+    if (choice == 2) {
+        const char* strings[] = { "banana", "apple", "orange", "grape", "pear" };
+        int size = sizeof(strings) / sizeof(strings[0]);
 
-        std::cout << "Before sorting:" << std::endl;
-        for (int i = 0; i < n; ++i) {
-            std::cout << arr[i] << " ";
+        shellSort(const_cast<char**>(strings), size);
+
+        std::cout << "Sorted strings:\n";
+        for (int i = 0; i < size; ++i) {
+            std::cout << strings[i] << std::endl;
         }
-        std::cout << std::endl;
-
-        performTask(arr, n, false);
-
-        std::cout << "After sorting:" << std::endl;
-        for (int i = 0; i < n; ++i) {
-            std::cout << arr[i] << " ";
-        }
-        std::cout << std::endl;
-    }
-    else {
-        std::cout << "Invalid choice!" << std::endl;
     }
 
     return 0;
