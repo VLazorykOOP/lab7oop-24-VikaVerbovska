@@ -7,7 +7,7 @@ void findMaxAndCount(T arr[], int size, T& maxVal, int& count) {
         return;
     }
 
-    maxVal = arr[0];
+    maxVal = arr[0
     count = 1;
 
     for (int i = 1; i < size; ++i) {
@@ -21,7 +21,7 @@ void findMaxAndCount(T arr[], int size, T& maxVal, int& count) {
     }
 }
 
-// Specialization for const char*
+// Specialization for const charr*
 void findMaxAndCount(const char* arr[], int size, const char*& maxVal, int& count) {
     if (size == 0) {
         std::cerr << "Error: Array is empty\n";
